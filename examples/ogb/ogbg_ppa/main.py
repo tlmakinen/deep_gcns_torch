@@ -61,6 +61,8 @@ def eval(model, device, loader, evaluator):
 def main():
     args = ArgsInit().save_exp()
 
+    datadir = "/data101/makinen/ogbn/"
+
     if args.use_gpu:
         device = torch.device("cuda:" + str(args.device)) if torch.cuda.is_available() else torch.device("cpu")
     else:
@@ -70,10 +72,12 @@ def main():
 
     if args.not_extract_node_feature:
         dataset = PygGraphPropPredDataset(name=args.dataset,
+                                         root=datadir,
                                           transform=add_zeros)
     else:
         extract_node_feature_func = partial(extract_node_feature, reduce=args.aggr)
         dataset = PygGraphPropPredDataset(name=args.dataset,
+                                          root=datadir,
                                           transform=extract_node_feature_func)
 
         sub_dir = sub_dir + '-NF_{}'.format(args.aggr)
@@ -157,3 +161,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

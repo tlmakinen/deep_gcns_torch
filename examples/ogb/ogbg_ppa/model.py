@@ -1,10 +1,15 @@
 import torch
 import __init__
-from gcn_lib.sparse.torch_vertex import GENConv
+#from gcn_lib.sparse.torch_vertex import GENConv
+from gcn_lib.dense.fishnets_nn import FishnetsAggregation
+from torch_geometric.nn import DeepGCNLayer, GENConv
 from gcn_lib.sparse.torch_nn import norm_layer
 import torch.nn.functional as F
 from torch_geometric.nn import global_add_pool, global_mean_pool, global_max_pool
 import logging
+
+
+
 
 
 class DeeperGCN(torch.nn.Module):
@@ -45,6 +50,12 @@ class DeeperGCN(torch.nn.Module):
             print('GraphConv->LN/BN->ReLU')
         else:
             raise Exception('Unknown block Type')
+        
+        if aggr == "fishnets":
+            if not args.n_p:
+                raise Exception('n_p bottleneck for fishnets not specified')
+
+            aggr = FishnetsAggregation(in_size=hidden_channels, n_p=n_p)
 
         self.gcns = torch.nn.ModuleList()
         self.norms = torch.nn.ModuleList()

@@ -43,7 +43,9 @@ class ArgsInit(object):
         parser.add_argument('--conv', type=str, default='gen',
                             help='the type of GCNs')
         parser.add_argument('--gcn_aggr', type=str, default='max',
-                            help='the aggregator of GENConv [mean, max, add, softmax, softmax_sg, power]')
+                            help='the aggregator of GENConv [fishnets, mean, max, add, softmax, softmax_sg, power]')
+        parser.add_argument('--np', type=int, default=8,
+                            help='fishnets score dimensionality bottleneck; default n_p=10')
         parser.add_argument('--norm', type=str, default='layer',
                             help='the type of normalization layer')
         parser.add_argument('--num_tasks', type=int, default=1,
