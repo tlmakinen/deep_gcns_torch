@@ -14,6 +14,8 @@ class ArgsInit(object):
         # dataset
         parser.add_argument('--dataset', type=str, default="ogbg-molhiv",
                             help='dataset name (default: ogbg-molhiv)')
+        parser.add_argument('--datadir', type=str, default='/data101/makinen/ogbn/',
+                            help='dataset path (default: /data101/makinen/ogbn/)')
         parser.add_argument('--num_workers', type=int, default=0,
                             help='number of workers (default: 0)')
         parser.add_argument('--batch_size', type=int, default=32,
