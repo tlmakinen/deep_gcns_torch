@@ -10,6 +10,16 @@ import time
 import statistics
 from ogb.graphproppred import PygGraphPropPredDataset, Evaluator
 
+import cloudpickle as pickle
+
+def save_obj(obj, name ):
+    with open(name + '.pkl', 'wb') as f:
+        pickle.dump(obj, f)
+        
+def load_obj(name):
+    with open(name, 'rb') as f:
+        return pickle.load(f)
+
 
 def train(model, device, loader, optimizer, task_type, grad_clip=0.):
     loss_list = []
@@ -78,8 +88,11 @@ def main():
 
     sub_dir = 'BS_{}-NF_{}'.format(args.batch_size,
                                    args.feature)
+    
+     # fix the random seed
+    torch.manual_seed(args.random_seed)
 
-    dataset = PygGraphPropPredDataset(name=args.dataset)
+    dataset = PygGraphPropPredDataset(name=args.dataset, root=args.datdir)
     args.num_tasks = dataset.num_tasks
     logging.info('%s' % args)
 
@@ -111,6 +124,14 @@ def main():
                'final_train': 0,
                'final_test': 0,
                'highest_train': 0}
+    
+    # training history
+    history = {
+        "train_acc": [],
+        "valid_acc": [],
+        "test_acc": [],
+        "losses": []
+    }
 
     start_time = time.time()
 
@@ -144,6 +165,13 @@ def main():
                       round(epoch_loss, 4), epoch,
                       args.model_save_path,
                       sub_dir, name_post='valid_best')
+            
+            history['train_acc'].append(train_result)
+            history['valid_acc'].append(valid_result)
+            history['test_acc'].append(test_result)
+
+            # save the training history as we go
+            save_obj(history, name=args.save + "/history")
 
     logging.info("%s" % results)
 
