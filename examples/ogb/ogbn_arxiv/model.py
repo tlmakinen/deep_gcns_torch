@@ -1,10 +1,15 @@
 import __init__
 import torch
-from gcn_lib.sparse.torch_vertex import GENConv
+#from gcn_lib.sparse.torch_vertex import GENConv
+from gcn_lib.dense.fishnets_nn import FishnetsAggregation
+from torch_geometric.nn import DeepGCNLayer, GENConv
 from gcn_lib.sparse.torch_nn import norm_layer
 import torch.nn.functional as F
 from torch.utils.checkpoint import checkpoint
 import logging
+
+def count_parameters(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 
 class DeeperGCN(torch.nn.Module):
@@ -22,6 +27,7 @@ class DeeperGCN(torch.nn.Module):
         num_tasks = args.num_tasks
         conv = args.conv
         aggr = args.gcn_aggr
+        n_p = args.n_p
 
         t = args.t
         self.learn_t = args.learn_t
@@ -54,6 +60,14 @@ class DeeperGCN(torch.nn.Module):
             print('GraphConv->LN/BN->ReLU')
         else:
             raise Exception('Unknown block Type')
+        
+
+        if aggr == "fishnets":
+            print('bottleneck for fishents n_p: {}'.format(n_p))
+            if not args.n_p:
+                raise Exception('n_p bottleneck for fishnets not specified')
+
+            aggr = FishnetsAggregation(in_size=hidden_channels, n_p=n_p)
 
         self.gcns = torch.nn.ModuleList()
         self.norms = torch.nn.ModuleList()
@@ -176,4 +190,3 @@ class DeeperGCN(torch.nn.Module):
                 print('Final s {}'.format(ss))
             else:
                 logging.info('Epoch {}, s {}'.format(epoch, ss))
-
