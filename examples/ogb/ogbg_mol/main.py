@@ -1,7 +1,7 @@
 import torch
 from torch_geometric.data import DataLoader
 import torch.optim as optim
-from model import DeeperGCN
+from model import DeeperGCN, count_parameters
 from tqdm import tqdm
 from args import ArgsInit
 from utils.ckpt_util import save_ckpt
@@ -115,6 +115,11 @@ def main():
                              num_workers=args.num_workers)
 
     model = DeeperGCN(args).to(device)
+
+    # print out model complexity
+    print("-----")
+    print("number of learnable parameters in model: ", count_parameters(model))
+    print("-----")
 
     logging.info(model)
 

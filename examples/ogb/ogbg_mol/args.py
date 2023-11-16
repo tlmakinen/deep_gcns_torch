@@ -45,7 +45,9 @@ class ArgsInit(object):
         parser.add_argument('--conv', type=str, default='gen',
                             help='the type of GCNs')
         parser.add_argument('--gcn_aggr', type=str, default='max',
-                            help='the aggregator of GENConv [mean, max, add, softmax, softmax_sg, power]')
+                            help='the aggregator of GENConv [fishnets, mean, max, add, softmax, softmax_sg, softmax_sum, power, power_sum]')
+        parser.add_argument('--n_p', type=int, default=8,
+                            help='fishnets score dimensionality bottleneck; default n_p=8')
         parser.add_argument('--norm', type=str, default='batch',
                             help='the type of normalization layer')
         parser.add_argument('--num_tasks', type=int, default=1,
@@ -76,15 +78,19 @@ class ArgsInit(object):
         # load pre-trained model
         parser.add_argument('--model_load_path', type=str, default='ogbg_molhiv_pretrained_model.pth',
                             help='the path of pre-trained model')
+        parser.add_argument('--random_seed', type=int, default=0,
+                            help='random seed for controlling model and training initialization; default=0')
+
 
         self.args = parser.parse_args()
 
     def save_exp(self):
         self.args.save = '{}-B_{}-C_{}-L_{}-F_{}-DP_{}' \
-                    '-GA_{}-T_{}-LT_{}-P_{}-LP_{}-Y_{}-LY_{}' \
+                    '-GA_{}-NP_{}-T_{}-LT_{}-P_{}-LP_{}-Y_{}-LY_{}' \
                     '-MN_{}-LS_{}'.format(self.args.save, self.args.block, self.args.conv,
                                           self.args.num_layers, self.args.hidden_channels,
                                           self.args.dropout, self.args.gcn_aggr,
+                                          self.args.n_p,
                                           self.args.t, self.args.learn_t, self.args.p, self.args.learn_p,
                                           self.args.y, self.args.learn_y,
                                           self.args.msg_norm, self.args.learn_msg_scale)
