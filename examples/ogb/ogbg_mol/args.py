@@ -89,13 +89,13 @@ class ArgsInit(object):
     def save_exp(self):
         self.args.save = '{}-B_{}-C_{}-L_{}-F_{}-DP_{}' \
                     '-GA_{}-NP_{}-T_{}-LT_{}-P_{}-LP_{}-Y_{}-LY_{}' \
-                    '-MN_{}-LS_{}'.format(self.args.save, self.args.block, self.args.conv,
+                    '-MN_{}-LS_{}-LR_{}'.format(self.args.save, self.args.block, self.args.conv,
                                           self.args.num_layers, self.args.hidden_channels,
                                           self.args.dropout, self.args.gcn_aggr,
                                           self.args.n_p,
                                           self.args.t, self.args.learn_t, self.args.p, self.args.learn_p,
                                           self.args.y, self.args.learn_y,
-                                          self.args.msg_norm, self.args.learn_msg_scale)
+                                          self.args.msg_norm, self.args.learn_msg_scale, self.args.lr)
 
         self.args.save = 'log/{}-{}-{}'.format(self.args.save, time.strftime("%Y%m%d-%H%M%S"), str(uuid.uuid4()))
         self.args.model_save_path = os.path.join(self.args.save, self.args.model_save_path)

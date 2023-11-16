@@ -185,27 +185,28 @@ class DeeperGCN(torch.nn.Module):
 
     def print_params(self, epoch=None, final=False):
 
-        if self.learn_t:
-            ts = []
-            for gcn in self.gcns:
-                ts.append(gcn.t.item())
-            if final:
-                print('Final t {}'.format(ts))
-            else:
-                logging.info('Epoch {}, t {}'.format(epoch, ts))
-        if self.learn_p:
-            ps = []
-            for gcn in self.gcns:
-                ps.append(gcn.p.item())
-            if final:
-                print('Final p {}'.format(ps))
-            else:
-                logging.info('Epoch {}, p {}'.format(epoch, ps))
-        if self.msg_norm:
-            ss = []
-            for gcn in self.gcns:
-                ss.append(gcn.msg_norm.msg_scale.item())
-            if final:
-                print('Final s {}'.format(ss))
-            else:
-                logging.info('Epoch {}, s {}'.format(epoch, ss))
+        # if self.learn_t:
+        #     ts = []
+        #     for gcn in self.gcns:
+        #         ts.append(gcn.t.item())
+        #     if final:
+        #         print('Final t {}'.format(ts))
+        #     else:
+        #         logging.info('Epoch {}, t {}'.format(epoch, ts))
+        # if self.learn_p:
+        #     ps = []
+        #     for gcn in self.gcns:
+        #         ps.append(gcn.p.item())
+        #     if final:
+        #         print('Final p {}'.format(ps))
+        #     else:
+        #         logging.info('Epoch {}, p {}'.format(epoch, ps))
+        # if self.msg_norm:
+        #     ss = []
+        #     for gcn in self.gcns:
+        #         ss.append(gcn.msg_norm.msg_scale.item())
+        #     if final:
+        #         print('Final s {}'.format(ss))
+        #     else:
+        #         logging.info('Epoch {}, s {}'.format(epoch, ss))
+        pass
