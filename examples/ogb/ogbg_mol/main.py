@@ -92,7 +92,7 @@ def main():
      # fix the random seed
     torch.manual_seed(args.random_seed)
 
-    dataset = PygGraphPropPredDataset(name=args.dataset, root=args.datdir)
+    dataset = PygGraphPropPredDataset(name=args.dataset, root=args.datadir)
     args.num_tasks = dataset.num_tasks
     logging.info('%s' % args)
 
