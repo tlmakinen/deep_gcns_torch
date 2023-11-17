@@ -171,12 +171,12 @@ def main():
                       args.model_save_path,
                       sub_dir, name_post='valid_best')
             
-            history['train_acc'].append(train_result)
-            history['valid_acc'].append(valid_result)
-            history['test_acc'].append(test_result)
+        history['train_acc'].append(train_result)
+        history['valid_acc'].append(valid_result)
+        history['test_acc'].append(test_result)
 
-            # save the training history as we go
-            save_obj(history, name=args.save + "/history")
+        # save the training history as we go
+        save_obj(history, name=args.save + "/history")
 
     logging.info("%s" % results)
 
