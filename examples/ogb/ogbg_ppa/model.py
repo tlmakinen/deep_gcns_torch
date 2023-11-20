@@ -24,6 +24,7 @@ class DeeperGCN(torch.nn.Module):
         num_tasks = args.num_tasks
         conv = args.conv
         aggr = args.gcn_aggr
+        n_p = args.n_p
         t = args.t
         self.learn_t = args.learn_t
         p = args.p
@@ -52,6 +53,7 @@ class DeeperGCN(torch.nn.Module):
             raise Exception('Unknown block Type')
         
         if aggr == "fishnets":
+            print('bottleneck for fishents n_p: {}'.format(n_p))
             if not args.n_p:
                 raise Exception('n_p bottleneck for fishnets not specified')
 
