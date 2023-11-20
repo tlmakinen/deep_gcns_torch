@@ -8,7 +8,7 @@ from ogb.nodeproppred import PygNodePropPredDataset
 from model import DeeperGCN, count_parameters
 from utils.ckpt_util import save_ckpt
 import logging
-import time
+import time,os
 
 import cloudpickle as pickle
 
@@ -58,8 +58,6 @@ def train(model, x, edge_index, y_true, train_idx, optimizer):
 
 
 def main():
-
-
 
     args = ArgsInit().save_exp()
     logging.getLogger().setLevel(logging.INFO)

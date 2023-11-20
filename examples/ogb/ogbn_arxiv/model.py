@@ -42,7 +42,7 @@ class DeeperGCN(torch.nn.Module):
         norm = args.norm
         mlp_layers = args.mlp_layers
 
-        if aggr in ['softmax_sg', 'softmax', 'power'] and self.num_layers > 7:
+        if aggr in ['softmax_sg', 'softmax', 'power', 'fishnets'] and self.num_layers > 2:
             self.checkpoint_grad = True
             self.ckp_k = self.num_layers // 2
 

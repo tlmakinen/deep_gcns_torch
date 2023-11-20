@@ -1,10 +1,15 @@
 import __init__
 import torch
-from gcn_lib.sparse.torch_vertex import GENConv
+from gcn_lib.dense.fishnets_nn import FishnetsAggregation
+#from gcn_lib.sparse.torch_vertex import GENConv
+from torch_geometric.nn import DeepGCNLayer, GENConv
 from gcn_lib.sparse.torch_nn import norm_layer
 import torch.nn.functional as F
 from torch.utils.checkpoint import checkpoint
 import logging
+
+def count_parameters(model):
+    return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 
 class DeeperGCN(torch.nn.Module):
@@ -21,6 +26,8 @@ class DeeperGCN(torch.nn.Module):
         num_tasks = args.num_tasks
         conv = args.conv
         aggr = args.gcn_aggr
+        n_p = args.n_p
+
 
         t = args.t
         self.learn_t = args.learn_t
@@ -58,6 +65,13 @@ class DeeperGCN(torch.nn.Module):
             print('GraphConv->LN/BN->ReLU')
         else:
             raise Exception('Unknown block Type')
+        
+        if aggr == "fishnets":
+            print('bottleneck for fishents n_p: {}'.format(n_p))
+            if not args.n_p:
+                raise Exception('n_p bottleneck for fishnets not specified')
+
+            aggr = FishnetsAggregation(in_size=hidden_channels, n_p=n_p)
 
         self.gcns = torch.nn.ModuleList()
         self.layer_norms = torch.nn.ModuleList()
@@ -166,38 +180,40 @@ class DeeperGCN(torch.nn.Module):
 
     def print_params(self, epoch=None, final=False):
 
-        if self.learn_t:
-            ts = []
-            for gcn in self.gcns:
-                ts.append(gcn.t.item())
-            if final:
-                print('Final t {}'.format(ts))
-            else:
-                logging.info('Epoch {}, t {}'.format(epoch, ts))
+        # if self.learn_t:
+        #     ts = []
+        #     for gcn in self.gcns:
+        #         ts.append(gcn.t.item())
+        #     if final:
+        #         print('Final t {}'.format(ts))
+        #     else:
+        #         logging.info('Epoch {}, t {}'.format(epoch, ts))
 
-        if self.learn_p:
-            ps = []
-            for gcn in self.gcns:
-                ps.append(gcn.p.item())
-            if final:
-                print('Final p {}'.format(ps))
-            else:
-                logging.info('Epoch {}, p {}'.format(epoch, ps))
+        # if self.learn_p:
+        #     ps = []
+        #     for gcn in self.gcns:
+        #         ps.append(gcn.p.item())
+        #     if final:
+        #         print('Final p {}'.format(ps))
+        #     else:
+        #         logging.info('Epoch {}, p {}'.format(epoch, ps))
 
-        if self.learn_y:
-            ys = []
-            for gcn in self.gcns:
-                ys.append(gcn.sigmoid_y.item())
-            if final:
-                print('Final sigmoid(y) {}'.format(ys))
-            else:
-                logging.info('Epoch {}, sigmoid(y) {}'.format(epoch, ys))
+        # if self.learn_y:
+        #     ys = []
+        #     for gcn in self.gcns:
+        #         ys.append(gcn.sigmoid_y.item())
+        #     if final:
+        #         print('Final sigmoid(y) {}'.format(ys))
+        #     else:
+        #         logging.info('Epoch {}, sigmoid(y) {}'.format(epoch, ys))
 
-        if self.msg_norm:
-            ss = []
-            for gcn in self.gcns:
-                ss.append(gcn.msg_norm.msg_scale.item())
-            if final:
-                print('Final s {}'.format(ss))
-            else:
-                logging.info('Epoch {}, s {}'.format(epoch, ss))
+        # if self.msg_norm:
+        #     ss = []
+        #     for gcn in self.gcns:
+        #         ss.append(gcn.msg_norm.msg_scale.item())
+        #     if final:
+        #         print('Final s {}'.format(ss))
+        #     else:
+        #         logging.info('Epoch {}, s {}'.format(epoch, ss))
+
+        pass

@@ -14,7 +14,7 @@ import random
 
 class OGBNDataset(object):
 
-    def __init__(self, dataset_name='ogbn-proteins'):
+    def __init__(self, dataset_name='ogbn-proteins', root='/data101/makinen/ogbn/'):
         """
         download the corresponding dataset based on the input name of dataset appointed
         the dataset will be divided into training, validation and test dataset
@@ -27,7 +27,7 @@ class OGBNDataset(object):
         """
         self.dataset_name = dataset_name
 
-        self.dataset = PygNodePropPredDataset(name=self.dataset_name)
+        self.dataset = PygNodePropPredDataset(name=self.dataset_name, root=root)
         self.splitted_idx = self.dataset.get_idx_split()
         self.whole_graph = self.dataset[0]
         self.length = 1

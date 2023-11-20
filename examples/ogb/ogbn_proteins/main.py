@@ -12,6 +12,16 @@ from utils.ckpt_util import save_ckpt
 from utils.data_util import intersection, process_indexes
 import logging
 
+import cloudpickle as pickle
+
+def save_obj(obj, name ):
+    with open(name + '.pkl', 'wb') as f:
+        pickle.dump(obj, f)
+        
+def load_obj(name):
+    with open(name, 'rb') as f:
+        return pickle.load(f)
+
 
 def train(data, dataset, model, optimizer, criterion, device):
 
@@ -141,9 +151,12 @@ def main():
     else:
         device = torch.device("cpu")
 
+    # fix the random seed
+    torch.manual_seed(args.random_seed)
+
     logging.info('%s' % device)
 
-    dataset = OGBNDataset(dataset_name=args.dataset)
+    dataset = OGBNDataset(dataset_name=args.dataset, root=args.datadir)
     # extract initial node features
     nf_path = dataset.extract_node_features(args.aggr)
 
@@ -176,6 +189,14 @@ def main():
                'final_train': 0,
                'final_test': 0,
                'highest_train': 0}
+    
+    # training history
+    history = {
+        "train_acc": [],
+        "valid_acc": [],
+        "test_acc": [],
+        "losses": []
+    }
 
     start_time = time.time()
 
@@ -211,6 +232,14 @@ def main():
 
         if train_result > results['highest_train']:
             results['highest_train'] = train_result
+        
+
+        history['train_acc'].append(train_result)
+        history['valid_acc'].append(valid_result)
+        history['test_acc'].append(test_result)
+
+        # save the training history as we go
+        save_obj(history, name=args.save + "/history")
 
     logging.info("%s" % results)
 
