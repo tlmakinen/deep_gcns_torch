@@ -3,7 +3,7 @@ import torch
 import torch.optim as optim
 import statistics
 from dataset import OGBNDataset
-from model import DeeperGCN
+from model import DeeperGCN, count_parameters
 from args import ArgsInit
 import time
 import numpy as np
@@ -184,6 +184,11 @@ def main():
 
     model = DeeperGCN(args).to(device)
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
+
+    # print out model complexity
+    print("-----")
+    print("number of learnable parameters in model: ", count_parameters(model))
+    print("-----")
 
     results = {'highest_valid': 0,
                'final_train': 0,

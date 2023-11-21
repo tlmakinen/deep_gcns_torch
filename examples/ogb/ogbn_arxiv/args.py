@@ -87,7 +87,7 @@ class ArgsInit(object):
                                           self.args.msg_norm, self.args.learn_msg_scale,
                                           self.args.lr)
 
-        self.args.save = 'log/{}-{}-{}'.format(self.args.save, time.strftime("%Y%m%d-%H%M%S"), str(uuid.uuid4()))
+        self.args.save = '/data101/makinen/graph_fishnets/experiments/arxiv/log/{}-{}-{}'.format(self.args.save, time.strftime("%Y%m%d-%H%M%S"), str(uuid.uuid4()))
         self.args.model_save_path = os.path.join(self.args.save, self.args.model_save_path)
         create_exp_dir(self.args.save, scripts_to_save=glob.glob('*.py'))
         log_format = '%(asctime)s %(message)s'
