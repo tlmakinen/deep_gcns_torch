@@ -177,8 +177,10 @@ def main():
 
         # save the training history as we go
         save_obj(history, name=args.save + "/history")
+        print("results", results)
 
     logging.info("%s" % results)
+    
 
     end_time = time.time()
     total_time = end_time - start_time
@@ -189,3 +191,10 @@ if __name__ == "__main__":
     cls_criterion = torch.nn.BCEWithLogitsLoss()
     reg_criterion = torch.nn.MSELoss()
     main()
+
+
+
+# command-line call for working model
+# GCN: python main.py --use_gpu --num_layers 7 --dataset ogbg-molhiv --block res+ --gcn_aggr softmax --t 1.0 --learn_t --dropout 0.2 --lr 0.0001
+
+# fishnets: 
